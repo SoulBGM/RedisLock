@@ -64,7 +64,8 @@ public class LockManager {
         }
 
         // 分布式事务锁的key
-        StringBuilder lockKeyStr = new StringBuilder("lock:" + keyPrefix);
+        StringBuilder lockKeyStr = new StringBuilder("lock:");
+        lockKeyStr.append(keyPrefix);
         // 获得加注解的方法参数的值
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (int i = 0; i < parameterAnnotations.length; i++) {
