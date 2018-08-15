@@ -1,6 +1,6 @@
 package git.soulbgm.lock;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Aspect
 @Component
-@Log4j
+@Slf4j
 public class LockManager {
 
     @Autowired
@@ -94,7 +94,7 @@ public class LockManager {
         if (redisLock.lock()) {
             service.scheduleAtFixedRate(() -> {
                 redisLock.expire(lockKeyStr.toString(), lock.lockTime());
-                log.info("key为{ " + lockKeyStr.toString() + " }的锁重新设置了过期时间");
+                log.info("key为{}的锁重新设置了过期时间", lockKeyStr.toString());
             }, lock.lockTime() - postponeTime, lock.lockTime() - postponeTime, TimeUnit.MILLISECONDS);
             Thread.sleep(lock.lockTime());
             try {
@@ -106,7 +106,7 @@ public class LockManager {
             } finally {
                 boolean unlock = redisLock.unlock();
                 if (!unlock) {
-                    log.warn("释放分布式锁失败, key=" + lockKeyStr.toString());
+                    log.warn("释放分布式锁失败, key={}", lockKeyStr.toString());
                 }
                 service.shutdown();
             }

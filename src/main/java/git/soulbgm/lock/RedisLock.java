@@ -1,6 +1,6 @@
 package git.soulbgm.lock;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * @date 2018-08-01 16:08
  * @description
  */
-@Log4j
+@Slf4j
 public class RedisLock {
 
     private RedisTemplate redisTemplate;
@@ -222,7 +222,7 @@ public class RedisLock {
                     }
 
                     if (result == 0) {
-                        log.warn("Redis分布式锁，解锁" + lockKey + "失败！解锁时间：" + System.currentTimeMillis());
+                        log.warn("Redis分布式锁，解锁{}失败！解锁时间：{}", lockKey, System.currentTimeMillis());
                     }
 
                     locked = (result == 0);
